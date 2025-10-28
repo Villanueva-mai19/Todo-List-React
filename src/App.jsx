@@ -1,49 +1,88 @@
-import TodoItem from "./TodoItem"
-import { useState } from "react"
+import { useState } from "react";
+import "./App.css";
 
-export default function App() {
+function App() {
+  const [formData, setFormData] = useState({
+    nombres: "",
+    apellidos: "",
+    mensaje: "",
+  });
 
-  const [tareas, setTareas] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
 
-  const [input, setInput] = useState("");
-
-
-  const   agregarTarea = () => {
-
-    if (input.trim()) {
-      setTareas([...tareas, { id: Date.now(), text: input.trim(), completed: false }]);
-      setInput("");
-    };
-
-  }
-
-
-  const toggleCompleted = (id) => {
-    setTareas(
-      tareas.map((tarea) =>
-        tarea.id === id ? { ...tarea, completed: !tarea.completed } : tarea
-      )
-    );
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-
-  const eliminarTarea = (id) => {
-    setTareas(tareas.filter((tarea) => tarea.id !== id));
-
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-2  rounded shadow">
-      <h1 className="text-3xl font-bold mb-5 text-center">LISTA DE TAREAS</h1>
-      <div className="flex gap-3 mb-5">
-        <input className="flex-1 p-2 border rounded" type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Añadir Tarea" />
-        <button className="bg-blue-500 text-white px-4 p-y-2 rounded" onClick={agregarTarea} >Añadir Tareas</button>
-      </div>
+    <div className="container">
+      <header className="header">
+        <nav>
+          <a href="#">Inicio</a>
+          <a href="#">Programas</a>
+          <a href="#">Contacto</a>
+        </nav>
+        <h2>Servicio Nacional de Aprendizaje</h2>
+        <h3>CGMLTI Bogotá</h3>
+      </header>
 
-      <div className="space-y-2 ">
-        {tareas.map((tarea) => (<TodoItem key={tarea.id} tarea={tarea} toggleCompleted={toggleCompleted} eliminarTarea={eliminarTarea} />))}
-      </div>
+      <main>
+        <section className="programas">
+          <button>ADSO</button>
+          <button>Redes de Datos</button>
+          <button>Animación 3D</button>
+          <button>Logística</button>
+          <button>Mercadeo</button>
+          <button>Sistemas</button>
+        </section>
 
+        <section className="contacto">
+          <h3>Contacto</h3>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="nombres"
+              placeholder="Nombres"
+              value={formData.nombres}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="apellidos"
+              placeholder="Apellidos"
+              value={formData.apellidos}
+              onChange={handleChange}
+              required
+            />
+            <textarea
+              name="mensaje"
+              placeholder="Mensaje"
+              value={formData.mensaje}
+              onChange={handleChange}
+              required
+            ></textarea>
+            <button type="submit">Enviar</button>
+          </form>
+
+          {submitted && (
+            <div className="resultado">
+              <h4>Datos enviados:</h4>
+              <p><strong>Nombres:</strong> {formData.nombres}</p>
+              <p><strong>Apellidos:</strong> {formData.apellidos}</p>
+              <p><strong>Mensaje:</strong> {formData.mensaje}</p>
+            </div>
+          )}
+        </section>
+      </main>
     </div>
-  )
+  );
 }
+
+export default App;
